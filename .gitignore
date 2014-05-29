@@ -1,12 +1,21 @@
-*.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
+**/.classpath
+.DS_Store
+**/nb-configuration.xml
+**/.springBeans
+**/testing.properties
+.project
+.metadata
+.DS_Store
+Servers
+.settings
+.classpath
+target
+mvn-repo
+bin
 *.war
-*.ear
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+*.log
+*/nbactions.xml  
+nbactions.xml
+testing.properties
+*/test-output
+JargonVersion.java
