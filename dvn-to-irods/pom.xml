@@ -10,4 +10,5 @@
   <groupId>org.dfc</groupId>
   <artifactId>dvn-to-irods</artifactId>
   <name>dvn-to-irods</name>
+  <description>Indexer to move annotated data within DataVerse itself to a preservation environment</description>
 </project>

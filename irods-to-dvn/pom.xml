@@ -10,4 +10,6 @@
   <groupId>org.dfc</groupId>
   <artifactId>irods-to-dvn</artifactId>
   <name>irods-to-dvn</name>
+    <description>Indexer to move data stored on an interem iRODS grid into DataVerse, with associated metadata</description>
+  
 </project>
