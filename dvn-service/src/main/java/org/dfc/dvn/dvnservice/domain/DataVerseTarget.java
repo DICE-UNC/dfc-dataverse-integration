@@ -13,7 +13,6 @@ public class DataVerseTarget {
 
 	private String title = "";
 	private String id = "";
-	private String dvnAlias = "";
 
 	public String getTitle() {
 		return title;
@@ -21,10 +20,6 @@ public class DataVerseTarget {
 
 	public String getId() {
 		return id;
-	}
-
-	public String getDvnAlias() {
-		return dvnAlias;
 	}
 
 	public void setTitle(String title) {
@@ -35,8 +30,9 @@ public class DataVerseTarget {
 		this.id = id;
 	}
 
-	public void setDvnAlias(String dvnAlias) {
-		this.dvnAlias = dvnAlias;
+	@Override
+	public String toString() {
+		return "DataVerseTarget [title=" + title + ", id=" + id + "]";
 	}
 
 }

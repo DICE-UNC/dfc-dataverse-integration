@@ -15,6 +15,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.dfc.dvn.dvnservice.DataverseService;
 import org.dfc.dvn.dvnservice.DataverseServiceException;
+import org.dfc.dvn.dvnservice.domain.DataVerseConfig;
 import org.dfc.dvn.dvnservice.domain.DataVerseTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,10 +32,17 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 	public static final Logger log = LoggerFactory
 			.getLogger(DataverseServiceViaRestImpl.class);
 
+	private final DataVerseConfig dataVerseConfig;
+
 	/**
 	 * 
 	 */
-	public DataverseServiceViaRestImpl() {
+	public DataverseServiceViaRestImpl(final DataVerseConfig dataVerseConfig) {
+		if (dataVerseConfig == null) {
+			throw new IllegalArgumentException("null dataVerseConfig");
+		}
+
+		this.dataVerseConfig = dataVerseConfig;
 	}
 
 	/*
@@ -68,8 +76,8 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
-			HttpPost httppost = new HttpPost("http://localhost:8080"
-					+ "/servlets-examples/servlet/RequestInfoExample");
+			HttpPost httppost = new HttpPost(dataVerseConfig.urlFromValues());
+			InputStream is = 
 			// see
 			// http://hc.apache.org/httpcomponents-client-4.3.x/httpmime/apidocs/
 			InputStreamBody bin = new InputStreamBody(new File(args[0]));
@@ -98,5 +106,4 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 		// step 2 blah
 
 	}
-
 }
