@@ -3,11 +3,15 @@
  */
 package org.dfc.dvn.dvnservice.impl;
 
-import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -45,16 +49,9 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 		this.dataVerseConfig = dataVerseConfig;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.dfc.dvn.dvnservice.DataverseService#importStudyToDvn(org.dfc.dvn.
-	 * dvnservice.domain.DataVerseTarget, java.lang.String)
-	 */
 	@Override
 	public void importStudyToDvn(DataVerseTarget dataVerseTarget,
-			String irodsCollectionAbsolutePath)
+			String irodsFileAbsolutePath, InputStream fileInput)
 			throws DataverseServiceException {
 
 		// step 1 blah
@@ -65,22 +62,28 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 			throw new IllegalArgumentException("null dataVerseTarget");
 		}
 
-		if (irodsCollectionAbsolutePath == null
-				|| irodsCollectionAbsolutePath.isEmpty()) {
+		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
-					"null or empty irodsCollectionAbsolutePath");
+					"null or empty irodsFileAbsolutePath");
+		}
+
+		if (fileInput == null) {
+			throw new IllegalArgumentException("null or empty fileInput");
 		}
 
 		log.info("dataVerseTarget:{}", dataVerseTarget);
-		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
+		log.info("irodsFileAbsolutePath:{}", irodsFileAbsolutePath);
+
+		BufferedInputStream bis = new BufferedInputStream(fileInput);
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
 			HttpPost httppost = new HttpPost(dataVerseConfig.urlFromValues());
-			InputStream is = 
+
 			// see
 			// http://hc.apache.org/httpcomponents-client-4.3.x/httpmime/apidocs/
-			InputStreamBody bin = new InputStreamBody(new File(args[0]));
+			InputStreamBody bin = new InputStreamBody(bis,
+					ContentType.APPLICATION_OCTET_STREAM);
 
 			HttpEntity reqEntity = MultipartEntityBuilder.create()
 					.addPart("bin", bin).build();
@@ -99,11 +102,20 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 			} finally {
 				response.close();
 			}
+		} catch (ClientProtocolException e) {
+			log.error("client protocol exception", e);
+			throw new DataverseServiceException("exception in http transfer", e);
+		} catch (IOException e) {
+			log.error("io exception", e);
+			throw new DataverseServiceException("ioexception in http transfer",
+					e);
 		} finally {
-			httpclient.close();
+			try {
+				httpclient.close();
+			} catch (IOException e) {
+				log.error("error closing http client logged and ignored", e);
+			}
 		}
-
-		// step 2 blah
 
 	}
 }
