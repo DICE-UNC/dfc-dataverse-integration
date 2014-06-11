@@ -7,7 +7,7 @@ package org.dfc.dvn.dvnservice.domain;
  * Configuration of a dataverse installation, including host/port info
  * 
  * @author Mike Conway - DICE
- * 
+ * TODO: read in a .props file to initialize
  */
 public class DataVerseConfig {
 
@@ -16,7 +16,7 @@ public class DataVerseConfig {
 	private boolean ssl = true;
 	private String requestRoot = "";
 	private String verb = "";
-	private String alias = "";
+	private String studyId = "";
 
 	/**
 	 * 
@@ -64,19 +64,19 @@ public class DataVerseConfig {
 		this.verb = verb;
 	}
 
-	public String getAlias() {
-		return alias;
+	public String getStudyId() {
+		return studyId;
 	}
 
-	public void setAlias(String alias) {
-		this.alias = alias;
+	public void setStudyId(String studyId) {
+		this.studyId = studyId;
 	}
 
 	@Override
 	public String toString() {
 		return "DataVerseConfig [host=" + host + ", port=" + port + ", ssl="
 				+ ssl + ", requestRoot=" + requestRoot + ", verb=" + verb
-				+ ", alias=" + alias + "]";
+				+ ", studyId=" + studyId + "]";
 	}
 
 	/**
