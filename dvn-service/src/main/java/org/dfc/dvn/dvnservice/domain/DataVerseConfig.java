@@ -6,8 +6,7 @@ package org.dfc.dvn.dvnservice.domain;
 /**
  * Configuration of a dataverse installation, including host/port info
  * 
- * @author Mike Conway - DICE
- * TODO: read in a .props file to initialize
+ * @author Mike Conway - DICE TODO: read in a .props file to initialize
  */
 public class DataVerseConfig {
 
@@ -102,9 +101,12 @@ public class DataVerseConfig {
 		sb.append("/");
 		sb.append(requestRoot);
 		sb.append("/");
-		sb.append(verb);
-		sb.append("/");
-		sb.append("alias");
+
+		if (!verb.isEmpty()) {
+			sb.append(verb);
+			sb.append("/");
+		}
+		sb.append(studyId);
 		return sb.toString();
 	}
 }

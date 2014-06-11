@@ -20,6 +20,8 @@ import org.apache.http.util.EntityUtils;
 import org.dfc.dvn.dvnservice.DataverseService;
 import org.dfc.dvn.dvnservice.DataverseServiceException;
 import org.dfc.dvn.dvnservice.domain.DataVerseConfig;
+import org.irods.jargon.core.utils.CollectionAndPath;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,15 +67,18 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 
 		log.info("irodsFileAbsolutePath:{}", irodsFileAbsolutePath);
 		BufferedInputStream bis = new BufferedInputStream(fileInput);
-
+		CollectionAndPath cap = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(irodsFileAbsolutePath);
+		
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		try {
 			HttpPost httppost = new HttpPost(dataVerseConfig.urlFromValues());
+			
+			log.info("url is:{}", dataVerseConfig.urlFromValues());
 
 			// see
 			// http://hc.apache.org/httpcomponents-client-4.3.x/httpmime/apidocs/
-			InputStreamBody bin = new InputStreamBody(bis,
-					ContentType.APPLICATION_OCTET_STREAM);
+			InputStreamBody bin = new InputStreamBody(bis,ContentType.create("application/zip"),
+					cap.getChildName()) ;
 
 			HttpEntity reqEntity = MultipartEntityBuilder.create()
 					.addPart("bin", bin).build();
