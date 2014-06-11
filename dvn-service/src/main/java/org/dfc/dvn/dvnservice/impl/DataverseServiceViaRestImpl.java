@@ -20,7 +20,6 @@ import org.apache.http.util.EntityUtils;
 import org.dfc.dvn.dvnservice.DataverseService;
 import org.dfc.dvn.dvnservice.DataverseServiceException;
 import org.dfc.dvn.dvnservice.domain.DataVerseConfig;
-import org.dfc.dvn.dvnservice.domain.DataVerseTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,17 +49,10 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 	}
 
 	@Override
-	public void importStudyToDvn(DataVerseTarget dataVerseTarget,
-			String irodsFileAbsolutePath, InputStream fileInput)
-			throws DataverseServiceException {
-
-		// step 1 blah
+	public void importStudyToDvn(String irodsFileAbsolutePath,
+			InputStream fileInput) throws DataverseServiceException {
 
 		log.info("importStudyToDvn()");
-
-		if (dataVerseTarget == null) {
-			throw new IllegalArgumentException("null dataVerseTarget");
-		}
 
 		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -71,9 +63,7 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 			throw new IllegalArgumentException("null or empty fileInput");
 		}
 
-		log.info("dataVerseTarget:{}", dataVerseTarget);
 		log.info("irodsFileAbsolutePath:{}", irodsFileAbsolutePath);
-
 		BufferedInputStream bis = new BufferedInputStream(fileInput);
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
