@@ -93,11 +93,7 @@ public class DataVerseConfig {
 		} else {
 			sb.append("http://");
 		}
-		
-		sb.append(userName);
-		sb.append(":");
-		sb.append(password);
-		sb.append("@");
+
 		sb.append(host);
 		if (!port.isEmpty()) {
 			sb.append(":");
