@@ -26,6 +26,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
@@ -110,7 +111,9 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 			HttpEntity reqEntity = MultipartEntityBuilder.create()
 					.addPart("bin", bin).build();
 
-			httppost.setEntity(reqEntity);
+			BufferedHttpEntity bufReqEntity = new BufferedHttpEntity(reqEntity);
+
+			httppost.setEntity(bufReqEntity);
 			CloseableHttpResponse response = httpclient.execute(httppost);
 			try {
 
