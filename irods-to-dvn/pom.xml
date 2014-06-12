@@ -54,6 +54,12 @@
 			<groupId>commons-logging</groupId>
 			<artifactId>commons-logging</artifactId>
 		</dependency>
+<dependency>
+	<groupId>commons-codec</groupId>
+	<artifactId>commons-codec</artifactId>
+	<version>1.9</version>
+</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -84,7 +90,7 @@
 						<Import-Package>
 							org.osgi.framework,org.irods.jargon.*,*;resolution:=optional
 						</Import-Package>
-						<Embed-Dependency>httpcore,httpclient,httpmime</Embed-Dependency>
+						<Embed-Dependency>commons-codec,httpcore,httpclient,httpmime</Embed-Dependency>
 						<Embed-Transitive>true</Embed-Transitive>
 					</instructions>
 				</configuration>
