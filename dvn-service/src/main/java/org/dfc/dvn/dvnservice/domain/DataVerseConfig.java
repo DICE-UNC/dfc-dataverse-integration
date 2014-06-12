@@ -16,6 +16,8 @@ public class DataVerseConfig {
 	private String requestRoot = "";
 	private String verb = "";
 	private String studyId = "";
+	private String userName = "";
+	private String password = "";
 
 	/**
 	 * 
@@ -91,7 +93,11 @@ public class DataVerseConfig {
 		} else {
 			sb.append("http://");
 		}
-
+		
+		sb.append(userName);
+		sb.append(":");
+		sb.append(password);
+		sb.append("@");
 		sb.append(host);
 		if (!port.isEmpty()) {
 			sb.append(":");
@@ -108,5 +114,21 @@ public class DataVerseConfig {
 		}
 		sb.append(studyId);
 		return sb.toString();
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }
