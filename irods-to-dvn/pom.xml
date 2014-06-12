@@ -1,19 +1,20 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.dfc</groupId>
-    <artifactId>dfc-dataverse-integration</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </parent>
-  <artifactId>irods-to-dvn</artifactId>
-  <name>irods-to-dvn</name>
-  <packaging>bundle</packaging>
-    <description>Indexer to move data stored on an interem iRODS grid into DataVerse, with associated metadata</description>
-  
-  <dependencies>
-  <dependency>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.dfc</groupId>
+		<artifactId>dfc-dataverse-integration</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+	<artifactId>irods-to-dvn</artifactId>
+	<name>irods-to-dvn</name>
+	<packaging>bundle</packaging>
+	<description>Indexer to move data stored on an interem iRODS grid into DataVerse, with associated metadata</description>
+
+	<dependencies>
+		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-commons-csv</artifactId>
 		</dependency>
@@ -28,42 +29,42 @@
 		<dependency>
 			<groupId>databook</groupId>
 			<artifactId>index</artifactId>
-<type>bundle</type>
 		</dependency>
-  
-<dependency>
-	<groupId>commons-logging</groupId>
-	<artifactId>commons-logging</artifactId>
-</dependency>
+		<dependency>
+			<groupId>org.dfc</groupId>
+			<artifactId>dvn-service</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<version>1.4.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<instructions>
+						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+						<Bundle-Name>${project.artifactId}</Bundle-Name>
+						<Bundle-Version>${project.version}</Bundle-Version>
+						<Private-Package />
+						<Export-Package>org.dfc.dvn.*</Export-Package>
+						<Bundle-Activator>org.dfc.dvn.irodstodvn.DvnServiceActivator</Bundle-Activator>
+						<Import-Package>
+							org.osgi.framework,org.irods.jargon.*,*;resolution:=optional
+						</Import-Package>
+						<Embed-Dependency />
+						<Embed-Transitive>true</Embed-Transitive>
+					</instructions>
+				</configuration>
+			</plugin>
+		</plugins>
 
+	</build>
 
-
-  </dependencies>
-  <build>
-  <plugins>
-  <plugin>
-		      <groupId>org.apache.felix</groupId>
-		      <artifactId>maven-bundle-plugin</artifactId>
-		      <version>1.4.0</version>
-		      <extensions>true</extensions>
-		      <configuration>
-		          <instructions>
-		              <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-		              <Bundle-Name>${project.artifactId}</Bundle-Name>
-		              <Bundle-Version>${project.version}</Bundle-Version>
-		              <Private-Package></Private-Package>
-		              <Export-Package>org.dfc.dvn.*</Export-Package>
-		              <Bundle-Activator>org.dfc.dvn.irodstodvn.DvnServiceActivator</Bundle-Activator>
-		              <Import-Package>
-		              	  org.osgi.framework,org.irods.jargon.*,*;resolution:=optional
-		              </Import-Package>
-					  <Embed-Dependency></Embed-Dependency>
-					  <Embed-Transitive>true</Embed-Transitive>
-		          </instructions>
-		      </configuration>
-		  </plugin>
-		  </plugins>
-  
-  </build>
-  
 </project>
