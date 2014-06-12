@@ -8,12 +8,12 @@
 		<id>dvn</id>
 		<properties>
 			<test.dvn.study>hdl:TEST/ODUM-IRODS_1111</test.dvn.study>
-			<test.dvn.deposit.request.root>/dvn/api/data-deposit/v1/swordv2/edit-media/study/
+			<test.dvn.deposit.request.root>dvn/api/data-deposit/v1/swordv2/edit-media/study
 			</test.dvn.deposit.request.root>
-			<test.dvn.deposit.variable.part>hdl:TEST/ODUM-IRODS_10010</test.dvn.deposit.variable.part>
+			<test.dvn.deposit.variable.part></test.dvn.deposit.variable.part>
 			<test.dvn.url.https>true</test.dvn.url.https>
 			<test.dvn.url.host>localhost</test.dvn.url.host>
-			<test.dvn.url.port>8181</test.dvn.url.port>
+			<test.dvn.url.port></test.dvn.url.port>
 			<test.dvn.user>xxxx</test.dvn.user>
 			<test.dvn.password>xxxx</test.dvn.password>
 		</properties>
