@@ -93,6 +93,8 @@ public class IrodsToDvnIndexer implements Indexer {
 					dataVerseConfig.setStudyId("");
 					dataVerseConfig.setVerb("hdl:TEST/ODUM-IRODS_10010");
 
+					log.info("dataverseConfig for op:" + dataVerseConfig);
+
 					DataverseService dataverseService = new DataverseServiceViaRestImpl(
 							dataVerseConfig);
 
@@ -101,8 +103,12 @@ public class IrodsToDvnIndexer implements Indexer {
 									.instanceIRODSFileInputStream(
 											dataObject.getLabel()));
 
+					log.info("calling to import:" + dataObject.getLabel());
+
 					dataverseService.importStudyToDvn(dataObject.getLabel(),
 							inputStream);
+
+					log.info("import op completed");
 
 					inputStream.close();
 					irodsFileSystem.closeAndEatExceptions();
