@@ -6,14 +6,27 @@ package org.dfc.dvn.dvnservice.impl;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.SSLContext;
 import org.apache.http.HttpEntity;
+import static org.apache.http.HttpHeaders.USER_AGENT;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -69,7 +82,24 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 		BufferedInputStream bis = new BufferedInputStream(fileInput);
 		CollectionAndPath cap = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(irodsFileAbsolutePath);
 		
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+        
+        
+		CloseableHttpClient httpclient = null; // HttpClients.createDefault();
+        
+        
+                CredentialsProvider credsProvider
+	                    = new BasicCredentialsProvider();
+	
+	            credsProvider.setCredentials(new AuthScope(dataVerseConfig.getHost(),
+	                    Integer.parseInt(dataVerseConfig.getPort())),
+	                    new UsernamePasswordCredentials(
+	                            dataVerseConfig.getUserName(), dataVerseConfig.getPassword()));
+	
+	            httpclient = getCloseableHttpClient(credsProvider);
+        
+        
+        
+        
 		try {
 			HttpPost httppost = new HttpPost(dataVerseConfig.urlFromValues());
 			
@@ -113,4 +143,50 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 		}
 
 	}
+    
+    
+    
+    static CloseableHttpClient getCloseableHttpClient(CredentialsProvider credsProvider) {
+        CloseableHttpClient httpclient = null;
+        try {
+
+
+            SSLContext sslcontext = SSLContexts.custom()
+                    .loadTrustMaterial(
+                            null, new TrustStrategy() {
+                                public boolean isTrusted(X509Certificate[] chain,
+                                        String authType)
+                                throws CertificateException {
+                                    return true;
+                                }
+                            }
+                    )
+                    .build();
+
+            SSLConnectionSocketFactory sslsf
+                    = new SSLConnectionSocketFactory(sslcontext,
+                            SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            httpclient = HttpClients.custom()
+                    .setSSLSocketFactory(sslsf)
+                    .setUserAgent(USER_AGENT)
+                    .setDefaultCredentialsProvider(credsProvider)
+                    .build();
+
+            return httpclient;
+
+        } catch (KeyStoreException ex) {
+            log.error("KeyStoreException", ex);
+
+        } catch (NoSuchAlgorithmException ex) {
+            log.error("NoSuchAlgorithmException", ex);
+
+        } catch (KeyManagementException ex) {
+            log.error("KeyManagementException", ex);
+
+        }
+        return httpclient;
+    }
+    
+    
+    
 }
