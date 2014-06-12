@@ -99,6 +99,11 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 
 		try {
 			HttpPost httppost = new HttpPost(dataVerseConfig.urlFromValues());
+			httppost.addHeader("Content-Type", "application/zip");
+			httppost.addHeader("Content-Disposition",
+					"filename= " + cap.getChildName());
+			httppost.addHeader("Packaging",
+					"http://purl.org/net/sword/package/SimpleZip");
 
 			log.info("url is:{}", dataVerseConfig.urlFromValues());
 
