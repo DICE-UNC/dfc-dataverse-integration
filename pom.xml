@@ -226,6 +226,11 @@
 				<version>${log4j.version}</version>
 			</dependency>
 			<dependency>
+                                <groupId>org.apache.httpcomponents</groupId>
+                                <artifactId>httpmime</artifactId>     
+                                <version>4.3.3</version>
+                        </dependency>
+			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
 				<version>${sl4j.version}</version>
@@ -246,6 +251,12 @@
 				<artifactId>httpmime</artifactId>
 				<version>4.3.3</version>
 			</dependency>
+			  <dependency>
+                                <groupId>org.apache.httpcomponents</groupId>
+                                <artifactId>httpcore</artifactId>     
+                                <version>4.3.2</version>
+                        </dependency>
+
 			<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-commons-csv</artifactId>
