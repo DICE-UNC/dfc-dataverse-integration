@@ -26,7 +26,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.conn.ssl.TrustStrategy;
-import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
@@ -108,12 +107,14 @@ public class DataverseServiceViaRestImpl implements DataverseService {
 			InputStreamBody bin = new InputStreamBody(bis,
 					ContentType.create("application/zip"), cap.getChildName());
 
-			HttpEntity reqEntity = MultipartEntityBuilder.create()
-					.addPart("bin", bin).build();
+			MultipartEntityBuilder reqEntity = MultipartEntityBuilder.create();
+			reqEntity.addPart("file",
+					new InputStreamBody(bis, cap.getChildName()));
 
-			BufferedHttpEntity bufReqEntity = new BufferedHttpEntity(reqEntity);
+			// BufferedHttpEntity bufReqEntity = new
+			// BufferedHttpEntity(reqEntity);
 
-			httppost.setEntity(bufReqEntity);
+			httppost.setEntity(reqEntity.build());
 			CloseableHttpResponse response = httpclient.execute(httppost);
 			try {
 
