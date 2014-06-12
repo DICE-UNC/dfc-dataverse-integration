@@ -45,7 +45,7 @@ public class IrodsToDvnIndexer implements Indexer {
 		try {
 			irodsFileSystem = IRODSFileSystem.instance();
 			irodsAccount = IRODSAccount.instance("dvndfc1.renci.org", 1247,
-					"demo", "putpasswordhere", "", "g1", "");
+					"demo", "getitworking", "", "g1", "");
 			// FIXME: hard code for now
 		} catch (JargonException e) {
 			log.error("unable to get IRODSFileSystem");
@@ -85,13 +85,15 @@ public class IrodsToDvnIndexer implements Indexer {
 					is.close();
 
 					DataVerseConfig dataVerseConfig = new DataVerseConfig();
-					dataVerseConfig.setHost("host");
-					dataVerseConfig.setPort("post");
+					dataVerseConfig.setHost("dvntest.irss.unc.edu");
+					dataVerseConfig.setPort("");
 					dataVerseConfig
-							.setRequestRoot("/dvn/api/data-deposit/v1/swordv2/edit-media/study/");
+							.setRequestRoot("/dvn/api/data-deposit/v1/swordv2/edit-media/study");
 					dataVerseConfig.setSsl(true);
 					dataVerseConfig.setStudyId("");
-					dataVerseConfig.setVerb("hdl:TEST/ODUM-IRODS_10010");
+					dataVerseConfig.setVerb("hdl:TEST/ODUM-IRODS_1111");
+					dataVerseConfig.setUserName("networkAdmin");
+					dataVerseConfig.setPassword("networkAdmin");
 
 					log.info("dataverseConfig for op:" + dataVerseConfig);
 

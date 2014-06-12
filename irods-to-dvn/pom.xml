@@ -29,6 +29,7 @@
 		<dependency>
 			<groupId>databook</groupId>
 			<artifactId>index</artifactId>
+			<type>bundle</type>
 		</dependency>
 		<dependency>
 			<groupId>org.dfc</groupId>

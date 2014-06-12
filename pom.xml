@@ -187,7 +187,7 @@
 				<groupId>databook</groupId>
 				<artifactId>index</artifactId>
 				<version>${databook.version}</version>
-				<type>jar</type>
+				<type>bundle</type>
 			</dependency>
 			<dependency>
 				<groupId>org.irods.jargon</groupId>
