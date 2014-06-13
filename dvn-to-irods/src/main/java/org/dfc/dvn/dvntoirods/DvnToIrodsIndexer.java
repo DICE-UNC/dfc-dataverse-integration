@@ -1,9 +1,8 @@
 package org.dfc.dvn.dvntoirods;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 
@@ -13,8 +12,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
-import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
@@ -39,6 +38,7 @@ public class DvnToIrodsIndexer implements Indexer {
 	private IRODSAccount dvnIrodsAccount;
 	private IRODSAccount dfcIrodsAccount;
 	private final String COLL_IN_DFC = "/dfcmain/home/mconway/dataversedemo";
+	private final String TEMP_TXFR = "/home/jonc/temptxfr/";
 
 	public void setIndexingService(IndexingService is) {
 		this.is = is;
@@ -118,22 +118,33 @@ public class DvnToIrodsIndexer implements Indexer {
 
 					sb.append(cap.getChildName());
 					String targetFileAbsPath = sb.toString();
-					log.info("getting output stream which will be in a file:"
-							+ targetFileAbsPath);
 
-					OutputStream outputStream = new BufferedOutputStream(
-							irodsFileSystem
-									.getIRODSFileFactory(dfcIrodsAccount)
-									.instanceIRODSFileOutputStream(
-											targetFileAbsPath));
+					StringBuilder tempSb = new StringBuilder();
+					tempSb.append(TEMP_TXFR);
+					tempSb.append(cap.getChildName());
 
-					log.info("copying...");
+					DataTransferOperations dvnDto = irodsFileSystem
+							.getIRODSAccessObjectFactory()
+							.getDataTransferOperations(dvnIrodsAccount);
 
-					Stream2StreamAO stream2Stream = irodsFileSystem
-							.getIRODSAccessObjectFactory().getStream2StreamAO(
-									dfcIrodsAccount);
+					String tempFileName = tempSb.toString();
 
-					stream2Stream.streamToStreamCopy(inputStream, outputStream);
+					File localTarget = new File(tempFileName);
+					log.info("local cache:" + localTarget);
+					localTarget.delete();
+
+					dvnDto.getOperation(dataObject.getLabel(),
+							localTarget.getAbsolutePath(), "", null, null);
+
+					log.info("cached local file...now shuttle to dfc");
+
+					DataTransferOperations dfcDto = irodsFileSystem
+							.getIRODSAccessObjectFactory()
+							.getDataTransferOperations(dfcIrodsAccount);
+
+					dfcDto.putOperation(localTarget.getAbsolutePath(),
+							targetFileAbsPath, "", null, null);
+					log.info("put cache to:" + targetFileAbsPath);
 
 					irodsFileSystem.closeAndEatExceptions();
 
