@@ -14,11 +14,13 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;  
    
+
 import databook.listener.Indexer; 
 import databook.listener.Scheduler;
 import databook.listener.Scheduler.Continuation;
@@ -96,6 +98,12 @@ public class DvnToIrodsIndexer implements Indexer {
 					sb.append("/");
 					sb.append("dfcdemo-");
 					sb.append(System.currentTimeMillis());
+					
+					String collName = sb.toString();
+					
+					IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(dfcIrodsAccount).instanceIRODSFile(collName);
+					collFile.mkdirs();
+					
 					sb.append("/");
 					CollectionAndPath cap = MiscIRODSUtils
 							.separateCollectionAndPathFromGivenAbsolutePath(dataObject.getLabel());
