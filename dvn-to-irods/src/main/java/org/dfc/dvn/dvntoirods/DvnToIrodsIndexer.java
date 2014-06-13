@@ -40,7 +40,7 @@ public class DvnToIrodsIndexer implements Indexer {
 	private IRODSFileSystem irodsFileSystem;
 	private IRODSAccount dvnIrodsAccount;
 	private IRODSAccount dfcIrodsAccount;
-	private final String COLL_IN_DFC = "/dfcmain/home/xxx/dataversedemo";
+	private final String COLL_IN_DFC = "/dfcmain/home/mconway/dataversedemo";
 
 	public void setIndexingService(IndexingService is) {
 		this.is = is;
@@ -52,7 +52,7 @@ public class DvnToIrodsIndexer implements Indexer {
 			irodsFileSystem = IRODSFileSystem.instance();
 			dvnIrodsAccount = IRODSAccount.instance("dvndfc1.renci.org", 1247,
 					"demo", "xxxx", "", "g1", "");
-			dfcIrodsAccount = IRODSAccount.instance("iren2.renci.org", 1237, "user", "password", "", "dfcMain", "");
+			dfcIrodsAccount = IRODSAccount.instance("iren2.renci.org", 1237, "user", "password", "", "dfcmain", "");
 			// FIXME: hard code for now
 		} catch (JargonException e) {
 			log.error("unable to get IRODSFileSystem");
@@ -95,6 +95,8 @@ public class DvnToIrodsIndexer implements Indexer {
 					
 					InputStream inputStream = new BufferedInputStream(irodsFileSystem.getIRODSFileFactory(dvnIrodsAccount).instanceIRODSFileInputStream(dataObject.getLabel()));
 					StringBuilder sb = new StringBuilder();
+					
+					sb.append(COLL_IN_DFC);
 					sb.append("/");
 					sb.append("dfcdemo-");
 					sb.append(System.currentTimeMillis());
