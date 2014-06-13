@@ -7,21 +7,19 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;  
-   
-
-import databook.listener.Indexer; 
+import databook.listener.Indexer;
 import databook.listener.Scheduler;
 import databook.listener.Scheduler.Continuation;
 import databook.listener.Scheduler.Job;
@@ -34,7 +32,7 @@ import databook.persistence.rule.rdf.ruleset.Messages;
 public class DvnToIrodsIndexer implements Indexer {
 
 	IndexingService is;
-	Scheduler scheduler;  
+	Scheduler scheduler;
 
 	public static Log log = LogFactory.getLog(DvnToIrodsIndexer.class);
 	private IRODSFileSystem irodsFileSystem;
@@ -52,7 +50,8 @@ public class DvnToIrodsIndexer implements Indexer {
 			irodsFileSystem = IRODSFileSystem.instance();
 			dvnIrodsAccount = IRODSAccount.instance("dvndfc1.renci.org", 1247,
 					"demo", "xxxx", "", "g1", "");
-			dfcIrodsAccount = IRODSAccount.instance("iren2.renci.org", 1237, "user", "password", "", "dfcmain", "");
+			dfcIrodsAccount = IRODSAccount.instance("iren2.renci.org", 1237,
+					"user", "password", "", "dfcmain", "");
 			// FIXME: hard code for now
 		} catch (JargonException e) {
 			log.error("unable to get IRODSFileSystem");
@@ -91,35 +90,50 @@ public class DvnToIrodsIndexer implements Indexer {
 					Reader is = data;
 					is.close();
 
-					log.info("getting input stream from file at path:" + dataObject.getLabel());
-					
-					InputStream inputStream = new BufferedInputStream(irodsFileSystem.getIRODSFileFactory(dvnIrodsAccount).instanceIRODSFileInputStream(dataObject.getLabel()));
+					log.info("getting input stream from file at path:"
+							+ dataObject.getLabel());
+
+					InputStream inputStream = new BufferedInputStream(
+							irodsFileSystem
+									.getIRODSFileFactory(dvnIrodsAccount)
+									.instanceIRODSFileInputStream(
+											dataObject.getLabel()));
 					StringBuilder sb = new StringBuilder();
-					
+
 					sb.append(COLL_IN_DFC);
 					sb.append("/");
 					sb.append("dfcdemo-");
 					sb.append(System.currentTimeMillis());
-					
+
 					String collName = sb.toString();
-					
-					IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(dfcIrodsAccount).instanceIRODSFile(collName);
+
+					IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(
+							dfcIrodsAccount).instanceIRODSFile(collName);
 					collFile.mkdirs();
-					
+
 					sb.append("/");
 					CollectionAndPath cap = MiscIRODSUtils
-							.separateCollectionAndPathFromGivenAbsolutePath(dataObject.getLabel());
+							.separateCollectionAndPathFromGivenAbsolutePath(dataObject
+									.getLabel());
 
 					sb.append(cap.getChildName());
 					String targetFileAbsPath = sb.toString();
-					log.info("getting output stream which will be in a file:" + targetFileAbsPath);
-					
-					OutputStream outputStream = new BufferedOutputStream(irodsFileSystem.getIRODSFileFactory(dfcIrodsAccount).instanceIRODSFileOutputStream(targetFileAbsPath));
-					
-					
+					log.info("getting output stream which will be in a file:"
+							+ targetFileAbsPath);
+
+					OutputStream outputStream = new BufferedOutputStream(
+							irodsFileSystem
+									.getIRODSFileFactory(dfcIrodsAccount)
+									.instanceIRODSFileOutputStream(
+											targetFileAbsPath));
+
 					log.info("copying...");
-					IOUtils.copy(inputStream, outputStream);
-					log.info("import op completed");
+
+					Stream2StreamAO stream2Stream = irodsFileSystem
+							.getIRODSAccessObjectFactory().getStream2StreamAO(
+									dfcIrodsAccount);
+
+					stream2Stream.streamToStreamCopy(inputStream, outputStream);
 
 					irodsFileSystem.closeAndEatExceptions();
 
