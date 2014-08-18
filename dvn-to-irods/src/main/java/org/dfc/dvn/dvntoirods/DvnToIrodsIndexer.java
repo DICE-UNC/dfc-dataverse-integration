@@ -145,6 +145,7 @@ public class DvnToIrodsIndexer implements Indexer {
 					dfcDto.putOperation(localTarget.getAbsolutePath(),
 							targetFileAbsPath, "", null, null);
 					log.info("put cache to:" + targetFileAbsPath);
+					localTarget.delete();
 
 					irodsFileSystem.closeAndEatExceptions();
 
