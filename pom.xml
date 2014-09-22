@@ -12,7 +12,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<sl4j.version>1.6.6</sl4j.version>
 		<log4j.version>1.2.16</log4j.version>
-		<jargon.version>4.0.2-SNAPSHOT</jargon.version>
+		<jargon.version>4.0.2-RELEASE</jargon.version>
 		<databook.version>0.0.1-SNAPSHOT</databook.version>
 	</properties>
 	<issueManagement>
